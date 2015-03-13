@@ -21,7 +21,7 @@ public class Record{
         for(String field : fields){
             allValues.append(field + " ");
         }
-        allValues.setLength(allValues.length() - 1); //Remove the trailing space
+        allValues.setLength(allValues.length() - 1);
         return allValues.toString();
     }
     

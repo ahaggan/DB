@@ -9,12 +9,12 @@ import java.util.*;
 public class Directory {
     private File dir;
     private boolean current;
-    private String name;
+    private String directoryName;
     
-    public Directory(String directoryName){
+    public Directory(String inputName){
         String filePath = new File("").getAbsolutePath();
-        name = filePath + directoryName;
-        File tempFile = new File(name);
+        directoryName = filePath + inputName;
+        File tempFile = new File(directoryName);
         if(tempFile.isDirectory()){
             current = true;
             System.out.println("");
@@ -30,8 +30,12 @@ public class Directory {
         dir = tempFile;
     }
     
+    public String getName(){
+        return directoryName;
+    }
+    
     public void create(){
-        File file = new File(name);
+        File file = new File(directoryName);
 	    if (!file.exists()) {
 		    if (file.mkdir()) {
 		    	System.out.println("Directory is created!");
@@ -122,8 +126,21 @@ public class Directory {
             }
             out.close();
         }catch(Exception e){ System.out.println("Oh No!");}
-        
+    }
     
+    public void delete(String name){
+        File[] files = finder();
+        boolean check = false;
+        String fileName = name + ".txt";
+        try{
+            for (File temp : files){
+                if(fileName.equals(temp.getName())){
+                    temp.setWritable(true);
+                    check = temp.delete();
+                }
+            }
+            System.out.println("File deleted: " + check);
+        }catch(Exception e){System.out.println("There are currently no files called" + name);}
     }
     
     

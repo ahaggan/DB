@@ -8,9 +8,8 @@ public class Table{
     
     public Table(String tableName, String inputFields){
         records = new ArrayList<Record>();
-        
         title = tableName;
-        fields = new Record(inputFields);
+        fields.addField(inputFields);
         recordCount = 0;
     }
     

@@ -23,15 +23,8 @@ public class Database{
         return true;
     }
     
-    public void createDirectory(String directory){
-        File file = new File(directory);
-	    if (!file.exists()) {
-		    if (file.mkdir()) {
-		    	System.out.println("Directory is created!");
-		    } else {
-		    	System.out.println("Failed to create directory!");
-		    }
-	    }
+    public void createDirectory(){
+        location.create();
 	}      
     
     public void printAvailableTables(){

@@ -27,6 +27,10 @@ public class Database{
         location.create();
 	}      
     
+    public void delete(String name){
+        location.delete(name);
+    }
+    
     public void printAvailableTables(){
         System.out.println("There are " + tables.size() + " tables in theis database.");
         System.out.println("They are: ");
