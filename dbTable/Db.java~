@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+public class Db{
+    public ArrayList<Table> databaseList;
+    public static void main(String[] args){
+        Db dataBase = new Db();
+        dataBase.run();
+    }
+    
+    public void run(){
+        databaseList = new ArrayList<Table>();
+        read();
+    }
+    
+    public void read(){
+        Console console = System.console();
+        boolean quit = false;
+        while(!quit){
+            String line = console.readLine("--> ");
+            if(line.equals("quit") || line.equals("QUIT")){
+                quit = true;
+            }else{
+                Command input = new Command();
+                databaseList = input.actionCommand(line, databaseList);
+            }
+        }
+        for(Table temp : databaseList){
+            temp.getFields();
+        }
+    }
+}
