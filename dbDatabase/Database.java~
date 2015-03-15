@@ -24,8 +24,28 @@ public class Database{
     }
     
     public void createDirectory(){
-        location.create();
+        location.createDirectory();
 	}      
+    
+    public void deleteDirectory(){
+        location.deleteDirectory();
+    }
+    
+    public void deleteTable(String name){
+        System.out.println("Table to delete: " + name);
+        try{
+            for(Table temp: tables){
+                if(temp.getTitle().equals(name)){
+                    tables.remove(tables.indexOf(temp));
+                }
+            }
+        }catch(Exception e){System.out.println("APARENTLY NO TABLES HERE!!!!");}
+        location.delete(name);
+    }
+    
+    public int numberOfTables(){
+        return tables.size();
+    }
     
     public void printAvailableTables(){
         System.out.println("There are " + tables.size() + " tables in theis database.");
@@ -37,13 +57,6 @@ public class Database{
     
     public Table getTable(String requestedTitle){
         System.out.println("requested: " + requestedTitle);
-        //ListIterator it = tables.listIterator();
-        /*while(it.hasNext()){
-            Table temp = it.next();
-            System.out.println(current.getTitle());
-            if(requestedTitle.equals(temp.getTitle())){
-                return temp;
-            }*/
         for(Table current : tables){
         System.out.println(current.getTitle());
             if(requestedTitle.equals(current.getTitle())){
@@ -62,5 +75,29 @@ public class Database{
         for(Table temp : tables){
             location.saveToFile(temp);
         }
+    }
+    
+    public void print(){
+        System.out.println("Database: " + title);
+        System.out.println("---------------------------------------------------------");
+        for(Table temp : tables){
+            temp.print();
+        }
+        System.out.println("---------------------------------------------------------");
+    }
+    
+    public boolean equals(Object test){
+        if(test == null){
+            return false;
+        }
+        if(getClass() != test.getClass()){
+            return false;
+        }
+        final Database testDatabase = (Database) test;
+        
+        if(!this.tables.equals(testDatabase.tables)){
+            return false;
+        }
+        return true;
     }
 }

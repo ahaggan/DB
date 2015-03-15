@@ -8,7 +8,6 @@ public class Table{
     
     public Table(String tableName, String inputFields){
         records = new ArrayList<Record>();
-        //String boldFields = "\033[1m"+inputFields+"\033[0m";
         title = tableName;
         fields = new Record(inputFields);
         recordCount = 0;

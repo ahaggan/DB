@@ -17,16 +17,9 @@ public class Directory {
         File tempFile = new File(directoryName);
         if(tempFile.isDirectory()){
             current = true;
-            System.out.println("");
-            System.out.println("DIRECTORY FOUND HOORAY!!!!!!!!!!!!");
-            System.out.println("");
         }else{
             current = false;
-            System.out.println("");
-            System.out.println("DIRECTORY MISSING!!!!!!!!!!!!");
-            System.out.println("");
         }
-        
         dir = tempFile;
     }
     
@@ -139,7 +132,7 @@ public class Directory {
                 out.println(record.getValues());
             }
             out.close();
-        }catch(Exception e){ System.out.println("Oh No!");}
+        }catch(Exception e){ System.out.println("Unable to save to file.");}
     }
     
     public void delete(String name){

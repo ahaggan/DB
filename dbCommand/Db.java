@@ -9,22 +9,24 @@ public class Db{
     public static void main(String[] args){
         Db dataBase = new Db();
         dataBase.run();
-    }
-    
-    public void run(){
-        Database current = new Database("Directory");
-        current.getFromDirectory("/Directory");
-        current.print();
         
         testRecord();
         testTable();
         testDirectory();
         testDatabase();
         printResults();
+    }
+    
+    public void run(){
+       database = new Database("Current");
+       read();
+        
+        
+        
         
     }
     
-    public void printResults(){
+    public static void printResults(){
         System.out.println("");
         System.out.println("--------------Test Results--------------");
         for(String output: testResults){
@@ -32,7 +34,7 @@ public class Db{
         }
     }
     
-    /*
+    
     public void read(){
         Console console = System.console();
         boolean quit = false;
@@ -42,13 +44,10 @@ public class Db{
                 quit = true;
             }else{
                 Command input = new Command();
-                databaseList = input.actionCommand(line, databaseList);
+                database = input.actionCommand(line, database);
             }
         }
-        for(Table temp : databaseList){
-            temp.getFields();
-        }
-    }*/
+    }
     
     private static int numberOfTests;
     private static int testPassed;

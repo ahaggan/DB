@@ -12,11 +12,29 @@ public class Db{
     }
     
     public void run(){
+        Database current = new Database("Directory");
+        current.getFromDirectory("/Directory");
+        current.print();
+        
+        Command temp = new Command();
+        temp.showDirectories();
         
         testRecord();
         testTable();
         testDirectory();
+        testDatabase();
+        printResults();
+        
     }
+    
+    public void printResults(){
+        System.out.println("");
+        System.out.println("--------------Test Results--------------");
+        for(String output: testResults){
+            System.out.println(output);
+        }
+    }
+    
     /*
     public void read(){
         Console console = System.console();
@@ -37,6 +55,8 @@ public class Db{
     
     private static int numberOfTests;
     private static int testPassed;
+    private static ArrayList<String> testResults = new ArrayList<String>();
+    
     public static void testRecord(){
         numberOfTests = 0;
         testPassed = 0;
@@ -61,9 +81,7 @@ public class Db{
         is(test1.getKey(), "Ashley");       //Test 8
         
         //Test results
-        System.out.println(
-            testPassed + " out of " + numberOfTests + 
-            " Record tests passed.");    
+        testResults.add(testPassed + " out of " + numberOfTests + " Record tests passed.");    
     }
     
     public static void testTable(){
@@ -85,26 +103,35 @@ public class Db{
         testArray.add(checkRecord2);
         test.addRecord("x y z");
         is(testArray, test.getRecords());       //Test 5
-        //Tests deleteRecord
-        ArrayList<Record> testArray2 = new ArrayList<Record>();
-        testArray2.add(checkRecord);
-        test.deleteRecord("x");
-        is(testArray2, test.getRecords());      //Test 6
         //Tests replaceRecord
+        //First replace should fail because it tries to reaplce with an identical primary key
+        test.replaceRecord("data1", "x 3 4");
+        is(testArray, test.getRecords());       //Test 6
+        test.replaceRecord("data1", "a b c");
+        ArrayList<Record> testArray2 = new ArrayList<Record>();
+        Record checkRecord3 = new Record("a b c");
+        testArray2.add(checkRecord3);
+        testArray2.add(checkRecord2);
+        is(testArray2, test.getRecords());      //Test 7
+        //Tests deleteRecord
         ArrayList<Record> testArray3 = new ArrayList<Record>();
-        testArray3.add(checkRecord2);
-        test.replaceRecord("data1", "x y z");
-        is(testArray3, test.getRecords());      //Test 7
+        testArray3.add(checkRecord3);
+        test.deleteRecord("x");
+        is(testArray3, test.getRecords());      //Test 8
+        
+        //Test key uniqueness - I will add a recort with the same key
+        //this shouldn't be added
+        test.addRecord("a y z");
+        is(testArray3, test.getRecords());      //Test 9
         //Test results
-        System.out.println(
-            testPassed + " out of " + numberOfTests + 
-            " Table tests passed."); 
+        testResults.add(testPassed + " out of " + numberOfTests + " Table tests passed."); 
     }
     
     public static void testDirectory(){
         numberOfTests = 0;
         testPassed = 0;
         Directory testDirectory = new Directory("/Test");
+        testDirectory.createDirectory();
         //Test that the constructor has found the correct directory
         is(testDirectory.exists(), true);       //Test 1
         String filePath = new File("").getAbsolutePath();
@@ -122,42 +149,56 @@ public class Db{
         is(testArray, directoryArray);      //Test 4
         //Test getTable function
         is(testTable, testDirectory.getTable("test"));      //Test 5
+        //Test deleteDirectory function - shouldn't work because there is a file in it
+        testDirectory.deleteDirectory();
+        is(testDirectory.exists(), true);       //Test 6
         //Test deleteRecord function
         testDirectory.delete("test");
         ArrayList<Table> testArray2 = new ArrayList<Table>();
-        is(testArray2, testDirectory.getAllFiles());        //Test 6
+        is(testArray2, testDirectory.getAllFiles());        //Test 7
+        //Test delete directory - should now work because the directory is empty
+        testDirectory.deleteDirectory();
+        is(testDirectory.exists(), false);       //Test 8
         
-        
-        //NEED TO ADD A DELETE DIRECTORY FUNCTION TO TEST CREATE PROPERLY
         //Test results
-        System.out.println(
-            testPassed + " out of " + numberOfTests + 
-            " Directory tests passed.");
+        testResults.add(testPassed + " out of " + numberOfTests + " Directory tests passed.");
     }
     
     public static void testDatabase(){
-        Database database = new Database("Directory");
-        database.getFromDirectory("/Directory");
-        database.printAvailableTables();
-        Table current = database.getTable("People");
-        if(current != null){
-            current.print();
-        }
+        numberOfTests = 0;
+        testPassed = 0;
+        //Create a database that doesn't currently exist
+        Database testDatabase = new Database("testDirectory");
+        is(testDatabase.getFromDirectory("/testDirectory"), false);     //Test 1
+        testDatabase.createDirectory();
+        is(testDatabase.getFromDirectory("/testDirectory"), true);      //Test 2
+        //Test add table function
+        Table newTable1 = new Table("test1", "Col1 Col2 Col3");
+        Table newTable2 = new Table("test2", "Col1 Col2 Col3");
+        Table newTable3 = new Table("test3", "Col1 Col2 Col3");
+        testDatabase.addTable(newTable1);
+        testDatabase.addTable(newTable2);
+        testDatabase.addTable(newTable3);
+        is(testDatabase.numberOfTables(), 3);       //Test 3
+        //Test getTable function
+        is(testDatabase.getTable("test2"), newTable2);      //Test 4
+        //Test saveDatabase - This will save the database to a file
+        testDatabase.saveDatabase();
+        Database testDatabase2 = new Database("testDirectory2");
+        testDatabase2.getFromDirectory("/testDirectory");
+        is(testDatabase, testDatabase2);        //Test 5
+        //test deleteTable function
+        testDatabase.deleteTable("test1");
+        is(testDatabase.numberOfTables(), 2);       //Test 6
+        //Test delete directory - need to remove rest of files first
+        testDatabase.deleteTable("test2");
+        testDatabase.deleteTable("test3");
+        testDatabase.deleteDirectory();
+        is(testDatabase.getFromDirectory("/testDirectory"), false);         //Test 7
+        //Test results
+        testResults.add(testPassed + " out of " + numberOfTests + " Database tests passed.");
         
-        database = new Database("Created");
-        database.getFromDirectory("/Created");
-        database.createDirectory();
-        database.getFromDirectory("/Created");
-        Table newTable = new Table("Things", "Data1 Data2 Data3");
-        newTable.addRecord("Item1 Item2 Item3");
-        database.addTable(newTable);
-        database.delete("Things");
-        database.printAvailableTables();
-        database.saveDatabase();
         
-        
-        current = database.getTable("Things");
-        current.print();
     }
     
     static void is(Object x, Object y) {
@@ -169,7 +210,7 @@ public class Db{
             testPassed++;
           
         }else{
-            System.out.println("Test number " + numberOfTests + " failed.");
+            testResults.add("Test number " + numberOfTests + " failed.");
             
         }
     }

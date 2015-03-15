@@ -9,22 +9,24 @@ public class Db{
     public static void main(String[] args){
         Db dataBase = new Db();
         dataBase.run();
-    }
-    
-    public void run(){
-        Database current = new Database("Directory");
-        current.getFromDirectory("/Directory");
-        current.print();
         
         testRecord();
         testTable();
         testDirectory();
         testDatabase();
         printResults();
+    }
+    
+    public void run(){
+       database = new Database("current");
+       read();
+        
+        
+        
         
     }
     
-    public void printResults(){
+    public static void printResults(){
         System.out.println("");
         System.out.println("--------------Test Results--------------");
         for(String output: testResults){
@@ -32,7 +34,7 @@ public class Db{
         }
     }
     
-    /*
+    
     public void read(){
         Console console = System.console();
         boolean quit = false;
@@ -42,13 +44,10 @@ public class Db{
                 quit = true;
             }else{
                 Command input = new Command();
-                databaseList = input.actionCommand(line, databaseList);
+                database = input.actionCommand(line, database);
             }
         }
-        for(Table temp : databaseList){
-            temp.getFields();
-        }
-    }*/
+    }
     
     private static int numberOfTests;
     private static int testPassed;
@@ -127,12 +126,12 @@ public class Db{
     public static void testDirectory(){
         numberOfTests = 0;
         testPassed = 0;
-        Directory testDirectory = new Directory("/Test");
+        Directory testDirectory = new Directory("Test");
         testDirectory.createDirectory();
         //Test that the constructor has found the correct directory
         is(testDirectory.exists(), true);       //Test 1
         String filePath = new File("").getAbsolutePath();
-        String testName = filePath + "/Test";
+        String testName = filePath + "Test";
         is(testName, testDirectory.getName());  //Test 2
         //Test an empty directory
         ArrayList<Table> testArray = new ArrayList<Table>();
@@ -166,9 +165,9 @@ public class Db{
         testPassed = 0;
         //Create a database that doesn't currently exist
         Database testDatabase = new Database("testDirectory");
-        is(testDatabase.getFromDirectory("/testDirectory"), false);     //Test 1
+        is(testDatabase.getFromDirectory("testDirectory"), false);     //Test 1
         testDatabase.createDirectory();
-        is(testDatabase.getFromDirectory("/testDirectory"), true);      //Test 2
+        is(testDatabase.getFromDirectory("testDirectory"), true);      //Test 2
         //Test add table function
         Table newTable1 = new Table("test1", "Col1 Col2 Col3");
         Table newTable2 = new Table("test2", "Col1 Col2 Col3");
@@ -182,7 +181,7 @@ public class Db{
         //Test saveDatabase - This will save the database to a file
         testDatabase.saveDatabase();
         Database testDatabase2 = new Database("testDirectory2");
-        testDatabase2.getFromDirectory("/testDirectory");
+        testDatabase2.getFromDirectory("testDirectory");
         is(testDatabase, testDatabase2);        //Test 5
         //test deleteTable function
         testDatabase.deleteTable("test1");

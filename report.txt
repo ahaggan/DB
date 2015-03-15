@@ -1,0 +1,65 @@
+The first stage of my project was to make a record class.
+This class created record objects which had the following functions:
+
+-getFields: Print the current fields
+-getNoOfFields: return the number of fields as an integer
+-setField: sets the value of a field to a new value. 
+-addField: adds a new value to the end to the current list of fields
+-removeField: removes a specified field from the record.
+
+
+The Second stage of my project was to introduce a table class.
+Whilst creating this class, I added a getKey function to the record class in order to find particular records to display, edit or remove.
+-getKey(returns the value in the first field).
+The table class has the following functions:
+
+-getTitle: return the table's name
+-addRecord: add a new record to the table
+-getNumber of Records: return number of records
+-getFields: returns the names of the tables fields
+-showRecords: displays all the records in the table, is very crude and  doesn't include field headings
+-getRecord: will return the chosen record(using record key) as an object as well as printing the record.
+-deleteRecord: delete the chosen record.
+-replaces the chosen record with a new one.
+
+Whilst creating the Table class I started looking at building a command class for the user to interact with the database. This enabled the user to create a table and add a record to it. Although I knew I would need this, it felt like something I would just have to rewrite later as my program developed. So I left this to revisit later.
+
+At this point my program was picking up enough functionality that it was becoming tiring to manually check after updating things. So I started to write some automated tests that checked that each function within a class was doing what it should be. I the testRecord and testTable functions here.
+ 
+The Third stage of the project was to add file handling to store and retrieve tables from .txt files. For readability I created a Directory class to handle this file handling. 
+The class has the following functions
+-constructor: This recieves the relative path to a folder which contains Table files, sets a current flag to true or false for if the directory exists of not
+-createDirectory: creates the current directory if it doesn't exist
+-deleteDirectory: deletes the current directory, only if there are no files in it
+-finder: returns an array of all the .txt files in the set directory
+-getAllFiles: returns an ArrayList of Tables containing the content of all the files in the directory
+-printFileNames: prints the names of the files in the set directory 
+-getTable: returns a Table object, made from the contents of a named file
+-makeTable: a private function which converts the contents of a file into a Table object.
+-saveToFile: Takes a Table as an argument and saves the contents to a file with the same name as the Table's title.
+-exists: returns if the directory exists or not
+-saveToFile: the function takes a Table and converts it into a file. It saves this file in the current directory.
+I wrote some automated tests in the testDirectory function - this highlighted some bugs in my code which I fixed
+
+At this point I added some formatting to the printing method in order to display the table columns neatly.
+I also added a uniqueness property to my key value, which at the moment is just the first column of the table. This was accompanied by a couple of tests to check.
+
+The fourth stage of the project was to create a database class. A lot of the functionality of this class utilised functionality of previous classes so made the functions relatively straight forward. Whilst writing the tests however I needed to adjust the way a couple of my functions worked, but this ensured that my class was robust and I was confident it does what I am expecting it to do.
+The Database class contains the following functions:
+- Constructor: This initialises the Database with a title
+- getFromDirectory: This copys all the files in the current directory into an arraylist. Returns false if the directory given to it doesn't exist or true otherwise. This stores the location of the directory in a variable.
+- createDirectory: creates the directory that is stored in the location variable.
+- deleteDirectory: deletes the current directory, if it doesn't have files in it.
+- delete table: removes a specified table from the Database arrayList and removes the file.
+- numberOfTables: returns the number of tables in the current database.
+- printAvailableTables: prints the titles of the tables in the current database.
+- getTable: returns a Table matching the name given to the function.
+- addTable: adds a new table to the Table arrayList
+- saveDatabase: Saves all the Tables in the current Database to the directory where the database is located. 
+
+Extention
+For the extension I decided to look at implementing a user interface. It seemed most appropriate to me to allow a user to interact with the system and, if it was a project being carried out for a customer it would create an initial working prototype to get feedback from. Writing this before I start I am unsure how far I will get through this extension and the functionality it will offer. I will be rewriting my Command class, since my program has changed a lot since it was initially written.
+
+
+
+

@@ -8,8 +8,9 @@ public class Table{
     
     public Table(String tableName, String inputFields){
         records = new ArrayList<Record>();
+        //String boldFields = "\033[1m"+inputFields+"\033[0m";
         title = tableName;
-        fields.addField(inputFields);
+        fields = new Record(inputFields);
         recordCount = 0;
     }
     
@@ -27,17 +28,38 @@ public class Table{
     
     public void addRecord(String inputData){
         Record input = new Record(inputData);
-        if(input.getNoOfFields() != fields.getNoOfFields()){
-            System.out.println("You have entered an incorrect number of values.");
-            System.out.print("You must enter: ");
-            fields.getValues();
-        }else{
+        if(keyMatch(input)){
+            return;
+        }    
+        if(fieldsMatch(input)){
             records.add(input);
             recordCount += 1;
         }
     }
     
-     public Record getRecord(String key){
+    private boolean fieldsMatch(Record input){
+        if(input.getNoOfFields() != fields.getNoOfFields()){
+            System.out.println("You have entered an incorrect number of values.");
+            System.out.print("You must enter: ");
+            fields.getValues();
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean keyMatch(Record input){
+        for (Record temp : records){
+            if(input.getKey().equals(temp.getKey())){
+                System.out.println("The first field in the table " + title + " is the primary key");
+                System.out.println("The rocord you tried to add has a conflict with the record:");
+                temp.print();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Record getRecord(String key){
         boolean found = false;
         String temp;
         for(Record data: records){
@@ -57,6 +79,7 @@ public class Table{
     
     
     public void print(){
+        System.out.println("Table: " + title);
         fields.print();
         for(Record temp : records){
             temp.print();
@@ -98,11 +121,13 @@ public class Table{
     public void replaceRecord(String key, String newRecord){
         
         Record input = new Record(newRecord);
-        if(input.getNoOfFields() != (fields.getNoOfFields())){ 
-            System.out.println("You have entered an incorrect number of values for your new record.");
-            System.out.print("You must enter: ");
-            fields.getValues();
+        if(!fieldsMatch(input)){
             return;
+        }
+        if(!input.getKey().equals(key)){
+            if (keyMatch(input)){
+                return;
+            }
         }
         ListIterator<Record> iterator = records.listIterator();
         boolean found = false;

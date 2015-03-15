@@ -34,21 +34,35 @@ public class Directory {
         return directoryName;
     }
     
-    public void create(){
+    public void createDirectory(){
         File file = new File(directoryName);
 	    if (!file.exists()) {
 		    if (file.mkdir()) {
 		    	System.out.println("Directory is created!");
+		    	current = true;
 		    } else {
 		    	System.out.println("Failed to create directory!");
 		    }
 	    }
     }
     
+    public void deleteDirectory(){
+        File dir = new File(directoryName);
+        //Wont delete a directory if it contains files.
+        // I kept this to prevent unwanted data loss
+        if(dir.isDirectory()){
+            dir.delete();           
+        }
+    }    
+    
     
     
     public boolean exists(){ 
-        return current;
+        File temp = new File(directoryName);
+        if(temp.exists() && temp.isDirectory()){
+            return true;
+        }
+        return false;
     }
     
     public File[] finder(){
@@ -94,21 +108,6 @@ public class Directory {
         return null;
     }
     
-    public void delete(String name){
-        File[] files = finder();
-        boolean check = false;
-        String fileName = name + ".txt";
-        try{
-            for (File temp : files){
-                if(fileName.equals(temp.getName())){
-                    temp.setWritable(true);
-                    check = temp.delete();
-                }
-            }
-            System.out.println("File deleted: " + check);
-        }catch(Exception e){System.out.println("There are currently no files called" + name);}
-    }
-    
     private Table makeTable(String file){
         Table temp;
         String path = dir.getName() + "/" + file;
@@ -141,8 +140,21 @@ public class Directory {
             }
             out.close();
         }catch(Exception e){ System.out.println("Oh No!");}
-        
+    }
     
+    public void delete(String name){
+        File[] files = finder();
+        boolean check = false;
+        String fileName = name + ".txt";
+        try{
+            for (File temp : files){
+                if(fileName.equals(temp.getName())){
+                    temp.setWritable(true);
+                    check = temp.delete();
+                }
+            }
+            System.out.println("File deleted: " + check);
+        }catch(Exception e){System.out.println("There are currently no files called" + name);}
     }
     
     
